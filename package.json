@@ -1,0 +1,27 @@
+{
+  "name": "react-2d",
+  "version": "0.0.1",
+  "description": "Canvas drawing with layers and transitions in react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jtmckay/react-2d.git"
+  },
+  "keywords": [
+    "react",
+    "2d",
+    "canvas",
+    "draw",
+    "layer",
+    "graph"
+  ],
+  "author": "Taylor McKay",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jtmckay/react-2d/issues"
+  },
+  "homepage": "https://github.com/jtmckay/react-2d#readme"
+}
