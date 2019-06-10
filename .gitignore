@@ -5,6 +5,9 @@
 /server/node_modules
 /server/log.txt
 
+# build
+/lib
+
 # testing
 /coverage
 
