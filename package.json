@@ -1,6 +1,6 @@
 {
     "name": "react-2d",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "author": "Taylor McKay",
     "license": "MIT",
     "description": "Canvas drawing with layers and transitions in react",
@@ -25,7 +25,8 @@
         "build": "babel src --out-dir lib",
         "lint": "eslint src",
         "publish": "npm run build && npm publish",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch": "babel src --out-dir lib --watch"
     },
     "peerDependencies": {
         "react": ">=16.8.0"

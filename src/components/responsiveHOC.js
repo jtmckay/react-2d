@@ -17,7 +17,7 @@ export default function withResponsiveSize (Component) {
         const [ heightState, setHeightState ] = useState(1000)
 
         useEffect(() => {
-            const handleResize = () => {
+            function handleResize () {
                 let widthToUse = width || container.current.clientWidth
                 if (widthToUse < minWidth) {
                     widthToUse = minWidth
@@ -38,11 +38,18 @@ export default function withResponsiveSize (Component) {
                 }
                 setHeightState(heightToUse)
             }
+
+            let lastCall
+            function frameResize () {
+                window.cancelAnimationFrame(lastCall)
+                lastCall = window.requestAnimationFrame(handleResize)
+            }
+
             handleResize()
             if (!height || !width) {
-                window.addEventListener('resize', handleResize)
+                window.addEventListener('resize', frameResize)
             }
-            return () => { window.removeEventListener('resize', handleResize) }
+            return () => { window.removeEventListener('resize', frameResize) }
         }, [])
 
         return (
