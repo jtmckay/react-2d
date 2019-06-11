@@ -2,7 +2,14 @@ import React, { useEffect, useRef } from 'react'
 import { drawMultilineFactory } from '../drawMultilineFactory'
 import { canvasOverlay } from '../canvasOverlay'
 
-export function Canvas ({ style, width, height, multilines, fill, imageDataUrl, verticalOverlay, horizontalOverlay }) {
+const animationRequests = {}
+
+function requestFrame (id, callback) {
+    window.cancelAnimationFrame(animationRequests[id])
+    animationRequests[id] = window.requestAnimationFrame(callback)
+}
+
+export function Canvas ({ id, style, width, height, multilines, fill, imageDataUrl, verticalOverlay, horizontalOverlay }) {
     const settings = {
         fill,
         width,
@@ -10,7 +17,7 @@ export function Canvas ({ style, width, height, multilines, fill, imageDataUrl, 
     }
     const sketchElement = useRef()
 
-    useEffect(() => {
+    function redraw () {
         sketchElement.current.width = width
         sketchElement.current.height = height
         const context = sketchElement.current.getContext('2d')
@@ -32,6 +39,10 @@ export function Canvas ({ style, width, height, multilines, fill, imageDataUrl, 
         if (horizontalOverlay) {
             horizontalOverlay.forEach(canvasOverlay(drawMultilineFactory(context), false, width, height))
         }
+    }
+
+    useEffect(() => {
+        requestFrame(id, redraw)
     }, [width, height, multilines, imageDataUrl, verticalOverlay, horizontalOverlay])
 
     return (

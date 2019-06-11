@@ -39,17 +39,11 @@ export default function withResponsiveSize (Component) {
                 setHeightState(heightToUse)
             }
 
-            let lastCall
-            function frameResize () {
-                window.cancelAnimationFrame(lastCall)
-                lastCall = window.requestAnimationFrame(handleResize)
-            }
-
             handleResize()
             if (!height || !width) {
-                window.addEventListener('resize', frameResize)
+                window.addEventListener('resize', handleResize)
             }
-            return () => { window.removeEventListener('resize', frameResize) }
+            return () => { window.removeEventListener('resize', handleResize) }
         }, [])
 
         return (

@@ -4,7 +4,7 @@
     "author": "Taylor McKay",
     "license": "MIT",
     "description": "Canvas drawing with layers and transitions in react",
-    "main": "lib/index.js",
+    "main": "dist/index.js",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/jtmckay/react-2d.git"
@@ -22,11 +22,11 @@
         "graph"
     ],
     "scripts": {
-        "build": "babel src --out-dir lib",
+        "build": "babel src --out-dir dist",
         "lint": "eslint src",
         "publish": "npm run build && npm publish",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "watch": "babel src --out-dir lib --watch"
+        "watch": "babel src --out-dir dist --watch"
     },
     "peerDependencies": {
         "react": ">=16.8.0"
