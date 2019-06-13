@@ -13,8 +13,7 @@ export default function withResponsiveSize (Component) {
         } = props
         const container = useRef()
 
-        const [ widthState, setWidthState ] = useState(width || minWidth)
-        const [ heightState, setHeightState ] = useState(1000)
+        const [ size, setSize ] = useState({ height: maxHeight, width: width || minWidth })
 
         useEffect(() => {
             function handleResize () {
@@ -25,7 +24,6 @@ export default function withResponsiveSize (Component) {
                 if (widthToUse > maxWidth) {
                     widthToUse = maxWidth
                 }
-                setWidthState(widthToUse)
                 let heightToUse = height
                 if (!heightToUse) {
                     heightToUse = widthToUse / ratio
@@ -36,10 +34,14 @@ export default function withResponsiveSize (Component) {
                 if (heightToUse > maxHeight) {
                     heightToUse = maxHeight
                 }
-                setHeightState(heightToUse)
+                setSize({ height: heightToUse, width: widthToUse })
             }
 
             handleResize()
+
+            // if it adds/removes a scroll bar by changing the size the first time, get the new size
+            setTimeout(handleResize, 100)
+
             if (!height || !width) {
                 window.addEventListener('resize', handleResize)
             }
@@ -47,8 +49,8 @@ export default function withResponsiveSize (Component) {
         }, [])
 
         return (
-            <div ref={container} className={props.className} style={{ width: '100%', height: heightState, position: 'relative' }}>
-                {widthState && <Component width={widthState} height={heightState} {...props} />}
+            <div ref={container} className={props.className} style={{ width: '100%', height: size.height, position: 'relative', overflow: 'hidden' }}>
+                {<Component width={size.width} height={size.height} {...props} />}
             </div>
         )
     }

@@ -4,6 +4,6 @@ export function dataPointToLinePointFactory (min, max) {
     }
 }
 
-export function getConfiguration () {
+export function getProjection () {
 
 }

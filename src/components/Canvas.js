@@ -2,14 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { drawMultilineFactory } from '../drawMultilineFactory'
 import { canvasOverlay } from '../canvasOverlay'
 
-const animationRequests = {}
-
-function requestFrame (id, callback) {
-    window.cancelAnimationFrame(animationRequests[id])
-    animationRequests[id] = window.requestAnimationFrame(callback)
-}
-
-export function Canvas ({ id, style, width, height, multilines, fill, imageDataUrl, verticalOverlay, horizontalOverlay }) {
+export function Canvas ({ style, width, height, multilines, fill, rawContextCallback, imageDataUrl, verticalOverlay, horizontalOverlay }) {
     const settings = {
         fill,
         width,
@@ -17,12 +10,11 @@ export function Canvas ({ id, style, width, height, multilines, fill, imageDataU
     }
     const sketchElement = useRef()
 
-    function redraw () {
+    useEffect(() => {
         sketchElement.current.width = width
         sketchElement.current.height = height
         const context = sketchElement.current.getContext('2d')
         context.clearRect(0, 0, width, height)
-        const drawMultiline = drawMultilineFactory(context, settings)
         if (imageDataUrl) {
             const img = new Image()
             img.src = imageDataUrl
@@ -30,8 +22,11 @@ export function Canvas ({ id, style, width, height, multilines, fill, imageDataU
                 context.drawImage(img, 0, 0)
             }
         }
+        if (rawContextCallback) {
+            rawContextCallback(context)
+        }
         if (multilines) {
-            multilines.forEach(drawMultiline)
+            multilines.forEach(drawMultilineFactory(context, settings))
         }
         if (verticalOverlay) {
             verticalOverlay.forEach(canvasOverlay(drawMultilineFactory(context), true, width, height))
@@ -39,16 +34,12 @@ export function Canvas ({ id, style, width, height, multilines, fill, imageDataU
         if (horizontalOverlay) {
             horizontalOverlay.forEach(canvasOverlay(drawMultilineFactory(context), false, width, height))
         }
-    }
-
-    useEffect(() => {
-        requestFrame(id, redraw)
     }, [width, height, multilines, imageDataUrl, verticalOverlay, horizontalOverlay])
 
     return (
         <canvas
             ref={sketchElement}
-            style={{ overflow: 'hidden', position: 'absolute', top: '0px', left: '0px', width, height, ...style }}>
+            style={{ overflow: 'hidden', position: 'absolute', top: '0px', left: '0px', ...style }}>
         </canvas>
     )
 }

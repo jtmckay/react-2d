@@ -1,13 +1,13 @@
 import React from 'react'
 import { Canvas } from './Canvas'
 import { ComponentOverlay } from './ComponentOverlay'
-import { getConfiguration } from '../getConfiguration'
+import { getProjection } from '../getProjection'
 
 export function LineLabel ({ text, xOffset, yOffset }) {
     return <div style={{ position: 'absolute', left: xOffset, top: yOffset }}>{text}</div>
 }
 
-export function LineChart ({ className, style, width, height, data, verticalOverlay, horizontalOverlay, labels }) {
+export function LineChart ({ className, style, width, height, data, verticalOverlay, horizontalOverlay, labels, labelFirstData = true, area }) {
     const componentOverlaySettings = {
         xOffset: 50,
         yOffset: 50,
@@ -15,7 +15,7 @@ export function LineChart ({ className, style, width, height, data, verticalOver
         ItemComponent: LineLabel
     }
 
-    const configuration = getConfiguration(data, width, height, [
+    const projection = getProjection(data, labelFirstData, width, height, [
         {
             id: 'multiline',
             size: 1,
@@ -40,9 +40,9 @@ export function LineChart ({ className, style, width, height, data, verticalOver
                 style={style}
                 width={width}
                 height={height}
-                fill={{ bottomOut: true }}
-                multilines={configuration.multilines}
+                multilines={projection.multilines}
                 verticalOverlay={verticalOverlay || [{
+                    fill: area && { bottomOut: true },
                     itemSize: 20,
                     multiline: {
                         points: [
@@ -64,7 +64,7 @@ export function LineChart ({ className, style, width, height, data, verticalOver
                     }
                 }]}
             />
-            <ComponentOverlay vertical items={labels || configuration.xAxis} {...componentOverlaySettings} />
+            <ComponentOverlay vertical items={labels || projection.xAxis} {...componentOverlaySettings} />
         </div>
     )
 }
