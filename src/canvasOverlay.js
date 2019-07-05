@@ -1,4 +1,4 @@
-import { findRangeSpace } from './space'
+import { findRangeSpace, getBounds } from './space'
 
 export function transformXPoint (drawMultiline, multiline, xOffset, yOffset) {
     return function (number) {
@@ -18,24 +18,19 @@ export function transformYPoint (drawMultiline, multiline, xOffset, yOffset) {
 
 export function canvasOverlay (drawMultiline, vertical, width, height) {
     return function (settings) {
+        const bounds = getBounds(width, height, settings)
         const {
-            xOffset = 0,
-            yOffset = 0
-        } = settings
-        const fixedXOffset = xOffset < 0 ? width + xOffset : xOffset
-        const fixedYOffset = yOffset < 0 ? height + yOffset : yOffset
-        const {
-            size = vertical ? height - fixedYOffset : width - fixedXOffset,
+            alignBottom,
+            alignRight,
             itemSize,
-            multiline
+            multiline,
+            size = vertical ? bounds.height : bounds.width
         } = settings
-        const min = vertical ? fixedYOffset : fixedXOffset
-        const max = vertical ? fixedYOffset + size : fixedXOffset + size
-        const rangeToDisplay = findRangeSpace(min, max, size, itemSize)
-        if (vertical) {
-            rangeToDisplay.forEach(transformYPoint(drawMultiline, multiline, fixedXOffset, fixedYOffset))
+        const rangeToDisplay = findRangeSpace(0, vertical ? bounds.height : bounds.width, size, itemSize)
+        if (!vertical) {
+            rangeToDisplay.forEach(transformXPoint(drawMultiline, multiline, bounds.leftEdge, alignBottom ? bounds.bottomEdge : bounds.topEdge))
         } else {
-            rangeToDisplay.forEach(transformXPoint(drawMultiline, multiline, fixedXOffset, fixedYOffset))
+            rangeToDisplay.forEach(transformYPoint(drawMultiline, multiline, alignRight ? bounds.rightEdge : bounds.leftEdge, bounds.topEdge))
         }
     }
 }

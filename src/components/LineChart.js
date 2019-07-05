@@ -3,35 +3,19 @@ import { Canvas } from './Canvas'
 import { ComponentOverlay } from './ComponentOverlay'
 import { getProjection } from '../getProjection'
 
-export function LineLabel ({ text, xOffset, yOffset }) {
-    return <div style={{ position: 'absolute', left: xOffset, top: yOffset }}>{text}</div>
+export function LineLabel ({ text, left, top }) {
+    return <div style={{ position: 'absolute', left, top }}>{text}</div>
 }
 
-export function LineChart ({ className, style, width, height, data, verticalOverlay, horizontalOverlay, labels, labelFirstData = true, area }) {
-    const componentOverlaySettings = {
-        xOffset: 50,
-        yOffset: 50,
-        size: 400,
-        ItemComponent: LineLabel
+export function LineChart ({ className, style, width, height, data, componentOverlay, horizontalOverlay, verticalOverlay, labels, labelFirstData = true, area }) {
+    const overlaySettings = {
+        bottomPadding: 20,
+        leftPadding: 20,
+        topPadding: 20,
+        rightPadding: 20
     }
 
-    const projection = getProjection(data, labelFirstData, width, height, [
-        {
-            id: 'multiline',
-            size: 1,
-            startIndex: labels ? 0 : 1
-        },
-        {
-            id: 'xAxis',
-            size: componentOverlaySettings.size,
-            dataIndex: 0
-        },
-        {
-            id: 'yAxis',
-            size: 50,
-            startIndex: labels ? 0 : 1
-        }
-    ])
+    const projection = getProjection(data, labelFirstData, width, height, overlaySettings)
 
     return (
         <div>
@@ -41,7 +25,19 @@ export function LineChart ({ className, style, width, height, data, verticalOver
                 width={width}
                 height={height}
                 multilines={projection.multilines}
+                horizontalOverlay={horizontalOverlay || [{
+                    ...overlaySettings,
+                    itemSize: 20,
+                    multiline: {
+                        points: [
+                            [0, 0],
+                            [0, 10]
+                        ],
+                        strokeStyle: 'blue'
+                    }
+                }]}
                 verticalOverlay={verticalOverlay || [{
+                    ...overlaySettings,
                     fill: area && { bottomOut: true },
                     itemSize: 20,
                     multiline: {
@@ -52,19 +48,14 @@ export function LineChart ({ className, style, width, height, data, verticalOver
                         strokeStyle: 'green'
                     }
                 }]}
-                horizontalOverlay={horizontalOverlay || [{
-                    yOffset: -10,
-                    itemSize: 20,
-                    multiline: {
-                        points: [
-                            [0, 0],
-                            [0, 10]
-                        ],
-                        strokeStyle: 'blue'
-                    }
-                }]}
             />
-            <ComponentOverlay vertical items={labels || projection.xAxis} {...componentOverlaySettings} />
+            <ComponentOverlay
+                {...overlaySettings}
+                ItemComponent={LineLabel}
+                items={labels || projection.xAxis}
+                width={width}
+                height={height}
+            />
         </div>
     )
 }

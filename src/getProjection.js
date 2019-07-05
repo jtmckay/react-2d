@@ -4,6 +4,6 @@ export function dataPointToLinePointFactory (min, max) {
     }
 }
 
-export function getProjection () {
+export function getProjection (data, labelFirstData, width, height, overlaySettings) {
 
 }

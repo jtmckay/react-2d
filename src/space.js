@@ -18,3 +18,16 @@ export function findRangeSpace (min, max, availableSpace, itemSpaceRequired, ind
     }
     return res
 }
+
+export function getBounds (originalWidth, originalHeight, overlaySettings) {
+    const width = originalWidth - (overlaySettings.leftPadding || 0) - (overlaySettings.rightPadding || 0)
+    const height = originalHeight - (overlaySettings.topPadding || 0) - (overlaySettings.bottomPadding || 0)
+    return {
+        bottomEdge: originalHeight - overlaySettings.bottomPadding || 0,
+        leftEdge: overlaySettings.leftPadding || 0,
+        rightEdge: originalWidth - overlaySettings.rightPadding || 0,
+        topEdge: overlaySettings.topPadding || 0,
+        width,
+        height
+    }
+}

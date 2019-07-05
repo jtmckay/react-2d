@@ -1,6 +1,6 @@
 {
     "name": "react-2d",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "author": "Taylor McKay",
     "license": "MIT",
     "description": "Canvas drawing with layers and transitions in react",

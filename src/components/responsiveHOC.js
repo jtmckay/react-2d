@@ -39,9 +39,6 @@ export default function withResponsiveSize (Component) {
 
             handleResize()
 
-            // if it adds/removes a scroll bar by changing the size the first time, get the new size
-            setTimeout(handleResize, 100)
-
             if (!height || !width) {
                 window.addEventListener('resize', handleResize)
             }
